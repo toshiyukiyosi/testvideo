@@ -6,6 +6,22 @@ var express = require('express'),
   var cookieParser = require('cookie-parser')
   var session = require('express-session');
   var localStrategy = require('passport-local').Strategy;
+  // var {check,validationResult} = require('express-validator/check');
+var mysql = require('mysql');
+var knex = require('knex')({
+  client:'mysql',
+  connection:{
+    host:'localhost',
+    user:'root',
+    password:'',
+    database:'hidden_db',
+    charset:'utf8',
+  }
+});
+var Bookshelf = require('bookshelf')(knex);
+var User = Bookshelf.Model.extend({
+  tableName:'users'
+});
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -52,13 +68,24 @@ passport.use(new localStrategy({
   session:false,
 },function(req,username,password,done){
   process.nextTick(function(){
-    if(username === 'test' && password === 'test'){
-      return done(null,username);
-    }else{
-      console.log('Login Error');
-      return done(null,false,{message:'パスワードが正しくありません'});
-    }
-  })
+    var reqName = req.body.username;
+    var reqPass = req.body.password;
+    
+    User.query({where: {username:reqName}, andWhere:{password:reqPass}})
+    .fetch().then((model) => {
+      // console.log(model);
+      
+      if(model){
+        return done(null,username);
+      }else{
+        console.log('Login Error');
+        return done(null,false,{message:'パスワードが正しくありません'});
+      }
+    })
+    // if(username === 'test' && password === 'test'){
+    // }else{
+    // }
+  });
 }));
 
 passport.serializeUser(function(user,done){
