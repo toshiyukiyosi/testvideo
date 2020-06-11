@@ -72,6 +72,8 @@ function joinToRoom() {
         openDialog("lockoutedDialog");
     }).on("locked", function (event) {
         lockRoom(true);
+    }).on('otherHandUp',function(remoteId){
+        otherHandUp(remoteId);
     });
 }
 
@@ -198,8 +200,8 @@ function prepareNewConnection(remoteId,targetName) {
     function onRemoteStreamRemoved(event) {
         remoteVideo.src = "";
         remoteVideo.parentNode.removeChild(remoteVideo);
-        remoteArea.parentNode.removeChild(remoteArea);
-        remoteName.parentNode.removeChild(remoteName);
+        // remoteArea.parentNode.removeChild(remoteArea);
+        // remoteName.parentNode.removeChild(remoteName);
     }
     peer.removeElement = function () {
         onRemoteStreamRemoved();
@@ -381,4 +383,23 @@ function lockRoom(displayOnly) {
 function unlockRoom() {
     //u cant unlock. everyone must out.
 }
+
+function handUp(){
+    socket.emit('handup',socket.id);
+}
+
+function otherHandUp(remoteId){
+    var otherHandUpId = 'area_' + remoteId.id;
+    // console.log(otherHandUpId);
+    // objectが返ってきてた
+    // console.log(remoteId);
+    var hand = document.createElement('img');
+    hand.src = "images/hand.png";
+    hand.className = 'handImg';
+    document.getElementById(otherHandUpId).appendChild(hand);
+    setTimeout(function(){
+        document.getElementById(otherHandUpId).removeChild(hand);
+    },15000);
+}
+
 setTimeout(startVideo, 0);

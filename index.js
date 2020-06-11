@@ -191,6 +191,9 @@ var chat = io.sockets.on('connection', function (socket) {
   socket.on('lock', function () {
     lockedRooms[socket.room] = true;
     socket.broadcast.to(socket.room).emit('locked');
-  })
+  });
+  socket.on('handup',function(id){
+    socket.broadcast.to(socket.room).emit('otherHandUp',{id});
+  });
 });
 

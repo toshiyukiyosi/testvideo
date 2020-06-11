@@ -213,3 +213,11 @@ html, body {
   line-height: 35px;
   text-align: center;
 }
+
+.handImg{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+}
