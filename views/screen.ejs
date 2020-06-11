@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>hidden.in</title>
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <link type="css" href="css/app.css"></link>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body>
+    <div id="header">
+        <img src="images/logo.png">
+    </div>
+    <div id="base">
+        <div id="itemArea">
+            <button id="startVideoButton" class="imgButton" onclick="startVideo();"><img src="images/video.png" /></button>
+            <button id="startScreenShareButton" class="imgButton" onclick="startScreenShare();"><img src="images/screen.png" /></button>
+            <button id="reloadButton" class="imgButton" onclick="reloadFunction();"><img src="images/reload.png" /></button>
+            <button id="showLinkButton" class="imgButton" onclick="showLink();"><img src="images/link.png" /></button>
+            <button id="soundButton" class="imgButton" onclick="mute();"><img src="images/sound.png" /></button>
+            <button id="lockButton" class="imgButton" onclick="lockRoom();"><img src="images/unlock.png" /></button>
+            <button id="stopButton" class="imgButton" onclick="stop();"><img src="images/switch.png" /></button>
+        </div>
+        <div id="videoArea">
+            <div id="video_wrap">
+                <div class="my_video_area">
+                    
+                    <video id="localVideo" class="video" autoplay muted></video>
+                    <span class="username"><%= user %> </span><!-- /.username -->
+                </div><!-- /.my_video_area -->
+
+            </div><!-- /#video_wrap -->
+        </div>
+        <br style="clear:both" />
+    </div>
+    <script src="js/screenshare.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/index.js"></script>
+    <div id="chromeExtensionInstallDialog" class="dialog">
+        Drag &amp; drop "screenshare_chrome_extension.crx" as file downloaded to <a target="_brank" href="chrome://extensions/">chrome://extensions/</a>        .<br /> Open chrome://extensions at new tab by yourself please.<br />
+        <button class="square_btn" id="chromeExtensionInstallDialogCloseButton">close</button>
+    </div>
+    <div id="screenShareOnlySupportedWithChrome" class="dialog">
+        Screen share only supported with chrome.<br /> And you should use <a href="https://www.google.co.jp/chrome/browser/desktop/index.html">chrome</a>.
+    </div>
+    <div id="linkDialog" class="dialog">
+        Share the link.
+        <div class="inputArea">
+            <input class="inputText" type="text" id="linkText" /><button id="linkCopyButton" class="textButton"><img src="images/copy.png" /></button>
+        </div>
+        <button class="square_btn" id="linkDialogCloseButton">close</button>
+    </div>
+    <div id="lockoutedDialog" class="dialog">
+        This room is locked.<br/>
+        <button class="square_btn" onclick="location.href='/'">To Top</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>hidden.in</title>
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <style>
+        html,
+        body,
+        div,
+        p,
+        img {
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 100%;
+            width: 100%;
+        }
+
+        body {
+            position: relative;
+            width: 100%;
+        }
+
+        #logo p {
+            opacity: 0.5;
+            color: white;
+            position: relative;
+            top: -200px;
+            animation: framein 10s ease 1s 1 alternate forwards running;
+        }
+
+        @keyframes framein {
+            0% {
+                transform: scale(.3);
+                top: -100px;
+            }
+            25% {
+                transform: scale(.6);
+                top: 100px;
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1) rotate(00deg);
+                opacity: 1;
+                top: 150px;
+            }
+        }
+
+        #readImage {
+            width: 100%;
+            height: 500px;
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            background-image: url("images/duck-1463317_1280.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: show 5s ease 11s 1 alternate forwards running;
+        }
+
+        @keyframes show {
+            0% {
+                opacity: 1;
+            }
+
+            10% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        input {
+            font-size: 40px;
+            z-index: 999;
+            border-radius: 5px;
+            color: white;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 100);
+            border: 1px solid rgba(100, 100, 100, 100);
+        }
+
+        #inputArea {
+            text-align: center;
+            position: relative;
+            top: -150px;
+            max-width: 100%;
+            padding: 0;
+        }
+
+        @media screen and (max-width: 480px) {
+            input {
+                width: 90%;
+                box-sizing: border-box;
+                margin-left: 2%;
+            }
+
+            .titleImg {
+                width: 90%;
+                margin-left: 2%;
+            }
+        }
+
+        @media screen and (min-width: 481px) {
+            input {
+                width: 50%;
+            }
+        }
+
+        #article {
+            text-align: center;
+            color: white;
+        }
+
+        .codeDiv {
+            background-color: darkgray;
+            border-radius: 3px;
+            border: 1px solid #666;
+            width: 80%;
+            margin-left: 6%;
+            text-align: left;
+            padding: 10px;
+        }
+
+        pre {
+            margin: 0;
+            font-size: 1rem;
+            overflow: hidden;
+        }
+
+        code {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .onlySampleSite {
+            display: none;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body>
+    <div id="logo" style="text-align: center;height:500px;">
+        <div id="readImage">
+        </div>
+        <p>
+            You might use the SaaS but
+        </p>
+        <p>
+            <img class="titleImg" src="images/logo.png">
+        </p>
+    </div>
+    <div id="inputArea">
+        <input type="text" placeholder="Enter your room name" />
+        <br style="clear:both" />
+    </div>
+    <div id="article">
+        <p>
+            You need video chat and screen cast when remote work.
+        </p>
+        <p>
+            You should better to use internet service.<br /> It's well mentenanced and supported.
+        </p>
+        <p>
+            But someone (like me) can't use Saas but only use on-premises application,<br /> Use this application "hidden.in".
+        </p>
+        <p>
+            hidden.in is secure because uses only your network.(not support turn.)
+        </p>
+        <p class="onlySampleSite">
+            This site is sample. I recommend using hidden.in on your infrastructure and limited network.
+            <br /> Install is easy.
+            <br /> With docker<br />
+            <div class="codeDiv onlySampleSite">
+                <pre><code>$sudo docker run -p 443:3000 ukiuni/hidden.in</code></pre>
+            </div>
+            <span class="onlySampleSite">or with node</span>
+            <div class="codeDiv onlySampleSite">
+                <pre><code>$git clone https://github.com/ukiuni/hidden.in.git
+$cd hidden.in &amp;&amp; npm install &amp;&amp; npm start</code></pre>
+            </div>
+        </p>
+        <p>
+            This is open sourced (Apache-2.0) software and easy to start on your server.
+        </p>
+        <p>
+            You can send issue to <a href="//github.com/ukiuni/hidden.in" style="color:white">GitHub</a>
+        </p>
+    </div>
+    <script>
+        var input = document.getElementsByTagName("input")[0];
+        input.onkeyup = function (e) {
+            if (e.which == 13) {
+                location.href = input.value;
+            }
+        };
+        if (location.href.indexOf("hidden.in.ukiuni.com") > -1) {
+            [].forEach.call(document.getElementsByClassName("onlySampleSite"), function (e) {
+                e.style.display = "block";
+            });
+        }
+    </script>
+</body>
+
+</html>
