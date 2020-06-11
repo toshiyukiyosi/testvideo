@@ -6,8 +6,6 @@ var express = require('express'),
   var cookieParser = require('cookie-parser')
   var session = require('express-session');
   var localStrategy = require('passport-local').Strategy;
-  // var cokkieParser = require()
-
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -115,15 +113,6 @@ app.get("/:channel",(req,res) =>  {
       title: 'Express',
       user: req.user 
     });
-    // var filePath = path.join(__dirname, 'static/screen.ejs');
-    // var stat = fs.statSync(filePath);
-  
-    // response.writeHead(200, {
-    //   'Content-Type': 'text/html',
-    //   'Content-Length': stat.size
-    // });
-    // var readStream = fs.createReadStream(filePath);
-    // readStream.pipe(response);
 
   }else{
     res.redirect('/login');
@@ -147,7 +136,7 @@ var chat = io.sockets.on('connection', function (socket) {
       io.to(socket.id).emit("lockouted", { id: socket.id, room: req.room });
       return;
     }
-    console.log(socket.request.session.passport.user);
+    // console.log(socket.request.session.passport.user);
     
     socket.room = req.room;
     socket.join(req.room);

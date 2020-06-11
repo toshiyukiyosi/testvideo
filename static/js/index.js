@@ -156,12 +156,8 @@ function prepareNewConnection(remoteId,targetName) {
                     candidate: event.candidate.candidate
                 }
             });
-            console.log(selfId);
-            console.log(remoteId);
-            // console.log(event);
-            
-            
-            
+            // console.log(selfId);
+            // console.log(remoteId);
         }
     };
 
