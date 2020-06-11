@@ -24,6 +24,8 @@ https://hub.docker.com/r/ukiuni/hidden.in/
 
 # Blowser
 Now test with chrome only.
+# Login
+username test. password test
 
 # Lisence
 Apache 2.0
