@@ -180,7 +180,7 @@ html, body {
   flex-wrap: wrap;
 }
 
-.my_video_area{
+#my_video_area{
   position: relative;
 }
 
