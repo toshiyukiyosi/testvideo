@@ -55,6 +55,7 @@ function joinToRoom() {
             peerConnections[id] = peerConnection;
             peerConnection.setRemoteDescription(new RTCSessionDescription(event.data));
             sendAnswer(event);
+        myNameSend(selfId,myName);
         } else if (event.data.type === 'answer') {
             var peerConnection = peerConnections[event.id];
             if (!peerConnection) {
@@ -62,6 +63,7 @@ function joinToRoom() {
                 return;
             }
             peerConnection.setRemoteDescription(new RTCSessionDescription(event.data));
+        myNameSend(selfId,myName);
         } else if (event.data.type === 'candidate') {
             if (!peerConnections[event.id]) {
                 peerConnections[event.id] = prepareNewConnection(event.id,event.name);
