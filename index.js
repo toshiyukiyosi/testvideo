@@ -194,5 +194,8 @@ var chat = io.sockets.on('connection', function (socket) {
   socket.on('handup',function(id){
     socket.broadcast.to(socket.room).emit('otherHandUp',{id});
   });
+  socket.on('mynamesend',function(id,name){
+    socket.broadcast.to(socket.room).emit('othernamesend',{id,name});
+  });
 });
 

@@ -41,8 +41,8 @@ function joinToRoom() {
         myName = event.name;
         
     }).on('otherJoined', function (event) {
-        sendOffer(event.id);
-        // myNameSend(event.id);
+        sendOffer(event.id,event.name);
+        myNameSend(selfId,myName);
         // var myName = event.name;
     }).on('message', function (event) {
         if (event.data.type === 'offer') {
@@ -64,7 +64,7 @@ function joinToRoom() {
             peerConnection.setRemoteDescription(new RTCSessionDescription(event.data));
         } else if (event.data.type === 'candidate') {
             if (!peerConnections[event.id]) {
-                peerConnections[event.id] = prepareNewConnection();
+                peerConnections[event.id] = prepareNewConnection(event.id,event.name);
             }
             var peerConnection = peerConnections[event.id];
             var candidate = new RTCIceCandidate({ sdpMLineIndex: event.data.sdpMLineIndex, sdpMid: event.data.sdpMid, candidate: event.data.candidate });
@@ -82,7 +82,11 @@ function joinToRoom() {
         lockRoom(true);
     }).on('otherHandUp',function(remoteId){
         otherHandUp(remoteId);
-    });
+    }).on('othernamesend',function(event){
+        otherNameCreate(event);
+        // console.log(event);
+        
+    })
 }
 
 function sendOffer(targetId,targetName) {
@@ -177,7 +181,7 @@ function prepareNewConnection(remoteId,targetName) {
     peer.addEventListener("addstream", onRemoteStreamAdded, false);
     peer.addEventListener("removestream", onRemoteStreamRemoved, false)
     var remoteVideo;
-    var remoteName;
+    // var remoteName;
     var remoteArea;
     function onRemoteStreamAdded(event) {
         var elementId = "video_" + remoteId;
@@ -185,10 +189,12 @@ function prepareNewConnection(remoteId,targetName) {
         remoteVideo = document.getElementById(elementId);
         remoteArea = document.getElementById(areaId);
         if (!remoteVideo) {
-            remoteArea = document.createElement('div');
-            remoteArea.className = 'remoteArea';
-            remoteArea.id = areaId;
-            document.getElementById('video_wrap').appendChild(remoteArea);
+            if(!remoteArea){
+                remoteArea = document.createElement('div');
+                remoteArea.className = 'remoteArea';
+                remoteArea.id = areaId;
+                document.getElementById('video_wrap').appendChild(remoteArea);
+            }
             remoteVideo = document.createElement("video");
             remoteVideo.className = "video";
             remoteVideo.id = elementId;
@@ -199,16 +205,16 @@ function prepareNewConnection(remoteId,targetName) {
             remoteVideo.setAttribute('cntrols',true);
             document.getElementById(areaId).appendChild(remoteVideo);
             toFullScreenable(remoteVideo);
-            if(targetName != myName){
-                remoteName = document.createElement('span');
-                remoteName.className = 'remoteName';
-                // remoteName.id = elementId;
-                console.log(targetName);
-                remoteName.textContent = targetName;
-                document.getElementById(areaId).appendChild(remoteName);
-            }else{
-                console.log('名前が一緒');
-            }
+            // if(targetName != myName){
+            //     remoteName = document.createElement('span');
+            //     remoteName.className = 'remoteName';
+            //     // remoteName.id = elementId;
+            //     console.log(targetName);
+            //     remoteName.textContent = targetName;
+            //     document.getElementById(areaId).appendChild(remoteName);
+            // }else{
+            //     console.log('名前が一緒');
+            // }
             
             
         }   
@@ -441,8 +447,33 @@ function otherHandUp(remoteId){
     },15000);
 }
 
-function myNameSend(targetId){
+function myNameSend(myId,myName){
+   socket.emit('mynamesend',{id:myId,name:myName});
+   console.log('myname send');
    
+}
+
+function otherNameCreate(otherconf){
+     if(otherconf.id.name != myName){
+    var otherId = 'area_' + otherconf.id.id;
+    var otherArea = document.getElementById(otherId);
+    if(!otherArea){
+        otherArea = document.createElement('div');
+        otherArea.className = 'remoteArea';
+        otherArea.id = otherId;
+        document.getElementById('video_wrap').appendChild(otherArea);
+        remoteName = document.createElement('span');
+        remoteName.className = 'remoteName';
+        // remoteName.id = elementId;
+        // console.log(otherconf);
+        remoteName.textContent = otherconf.id.name;
+        otherArea.appendChild(remoteName);
+        socket.emit('mynamesend',{id:selfId,name:myName});
+    }
+    }else{
+    console.log('名前が一緒');
+    return;
+    }
 }
 
 setTimeout(startVideo, 0);
