@@ -164,10 +164,9 @@ var chat = io.sockets.on('connection', function (socket) {
       return;
     }
     // console.log(socket.request.session.passport.user);
-    
     socket.room = req.room;
     socket.join(req.room);
-    io.to(socket.id).emit("joined", { id: socket.id });
+    io.to(socket.id).emit("joined", { id: socket.id,name:socket.request.session.passport.user });
     socket.broadcast.to(socket.room).json.emit("otherJoined", { id: socket.id,name: socket.request.session.passport.user  });
   });
   socket.on('offer', function (offer) {

@@ -9,6 +9,7 @@ var mediaConstraints = {
     }
 };
 var selfId;
+var myName;
 function toFullScreenable(target) {
     target.requestFullscreen = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen || target.msRequestFullscreen;
     target.onclick = function () {
@@ -27,15 +28,22 @@ var joinedToRoom = false;
 var socket = io.connect('/');
 socket.on('connect', function (event) {
     socketReady = true;
+    
 })
 function joinToRoom() {
     socket.json.emit("join", { room: location.pathname });
+    
     socket.on('joined', function (event) {
         joinedToRoom = true;
         // socket.idが入っている
         selfId = event.id;
+        // console.log(myName);
+        myName = event.name;
+        
     }).on('otherJoined', function (event) {
-        sendOffer(event.id,event.name);
+        sendOffer(event.id);
+        // myNameSend(event.id);
+        // var myName = event.name;
     }).on('message', function (event) {
         if (event.data.type === 'offer') {
             var id = event.id;
@@ -80,6 +88,7 @@ function joinToRoom() {
 function sendOffer(targetId,targetName) {
     var peerConnection = prepareNewConnection(targetId,targetName);
     peerConnections[targetId] = peerConnection;
+    
     peerConnection.createOffer(function (sessionDescription) {
         peerConnection.setLocalDescription(sessionDescription);
         socket.json.emit("offer", {
@@ -136,7 +145,8 @@ function doDialogChange(dialog, opacity, degree) {
     }
 }
 function prepareNewConnection(remoteId,targetName) {
-    var RTCPeerConnection = RTCPeerConnection || webkitRTCPeerConnection;
+    // var RTCPeerConnection = RTCPeerConnection || webkitRTCPeerConnection;
+    var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPerrConnection;
     var pc_config = { "iceServers": [] };
     var peer = null;
     try {
@@ -150,7 +160,6 @@ function prepareNewConnection(remoteId,targetName) {
             socket.json.emit("candidate", {
                 id: selfId,
                 targetId: remoteId,
-                name:targetName,
                 data: {
                     type: "candidate",
                     sdpMLineIndex: event.candidate.sdpMLineIndex,
@@ -173,7 +182,8 @@ function prepareNewConnection(remoteId,targetName) {
     function onRemoteStreamAdded(event) {
         var elementId = "video_" + remoteId;
         var areaId = 'area_' + remoteId;
-        remoteVideo = document.getElementById(elementId)
+        remoteVideo = document.getElementById(elementId);
+        remoteArea = document.getElementById(areaId);
         if (!remoteVideo) {
             remoteArea = document.createElement('div');
             remoteArea.className = 'remoteArea';
@@ -182,14 +192,24 @@ function prepareNewConnection(remoteId,targetName) {
             remoteVideo = document.createElement("video");
             remoteVideo.className = "video";
             remoteVideo.id = elementId;
+            // 追記
+            remoteVideo.setAttribute('playsinline',true);
+            remoteVideo.setAttribute('autoplay',true);
+            remoteVideo.setAttribute('muted',true);
+            remoteVideo.setAttribute('cntrols',true);
             document.getElementById(areaId).appendChild(remoteVideo);
             toFullScreenable(remoteVideo);
-            remoteName = document.createElement('span');
-            remoteName.className = 'remoteName';
-            // remoteName.id = elementId;
-            console.log(targetName);
-            remoteName.textContent = targetName;
-            document.getElementById(areaId).appendChild(remoteName);
+            if(targetName != myName){
+                remoteName = document.createElement('span');
+                remoteName.className = 'remoteName';
+                // remoteName.id = elementId;
+                console.log(targetName);
+                remoteName.textContent = targetName;
+                document.getElementById(areaId).appendChild(remoteName);
+            }else{
+                console.log('名前が一緒');
+            }
+            
             
         }   
         // remoteVideo.src = URL.createObjectURL(event.stream);
@@ -236,20 +256,31 @@ function initVideoArea() {
 }
 function startVideo() {
     reloadFunction = startVideo;
-    navigator.getUserMedia({ video: true, audio: true },
-        function (stream) {
-            prepareStream(stream);
-            if (firstActionForReload) {
-                initVideoArea();
-                firstActionForReload = false;
-            }
-        },
-        function (error) {
-            console.error('fail ' + error.code);
-            return;
+    // navigator.getUserMedia({ video: true, audio: true },
+    //     function (stream) {
+    //         prepareStream(stream);
+    //         if (firstActionForReload) {
+    //             initVideoArea();
+    //             firstActionForReload = false;
+    //         }
+    //     },
+    //     function (error) {
+    //         console.error('fail ' + error.code);
+    //         return;
+    var medias = {video: true,audio:true};
+    navigator.mediaDevices.getUserMedia(medias).then(function (stream){
+        prepareStream(stream);
+        if(firstActionForReload){
+            initVideoArea();
+            firstActionForReload = false;
         }
-    );
-}
+    }).catch(function(error){
+        console.error('fail' + error.code);
+        return;
+    });
+        }
+    // );
+// }
 var screenShare = new SkyWay.ScreenShare({ debug: true });
 function startScreenShare() {
     if (!screenShare.isEnabledExtension()) {
@@ -386,6 +417,14 @@ function unlockRoom() {
 
 function handUp(){
     socket.emit('handup',socket.id);
+    var myVideoArea = document.getElementById('my_video_area');
+    var myhand = document.createElement('img');
+    myhand.src = "images/hand.png";
+    myhand.className = 'handImg';
+    myVideoArea.appendChild(myhand);
+    setTimeout(function(){
+        myVideoArea.removeChild(myhand);
+    },15000);
 }
 
 function otherHandUp(remoteId){
@@ -400,6 +439,10 @@ function otherHandUp(remoteId){
     setTimeout(function(){
         document.getElementById(otherHandUpId).removeChild(hand);
     },15000);
+}
+
+function myNameSend(targetId){
+   
 }
 
 setTimeout(startVideo, 0);
