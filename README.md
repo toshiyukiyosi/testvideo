@@ -1,5 +1,8 @@
 
 
+# MySQL
+usersテーブルを作成して適当なユーザー名、パスワードデータベースに入れて作成してください
+
 # Node.js
 ```
 git clone https://github.com/toshiyukiyosi/testvideo
