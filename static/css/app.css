@@ -1,41 +1,45 @@
 video::-webkit-media-controls-enclosure {
-    overflow:hidden;
+  overflow: hidden;
 }
 
 video::-webkit-media-controls-panel {
-    display:none;
+  display: none;
 }
 .video {
   border: 1px solid black;
   background-image: url("../images/calling.png");
   background-position: center;
-  background-repeat: no-repeat
+  background-repeat: no-repeat;
 }
-
 
 @media screen and (max-width: 480px) {
   .video {
-    width:100%;
+    width: 100%;
   }
   #itemArea {
-    position:fixed;
+    /* position:fixed; */
+    position: absolute;
     bottom: 0;
     left: 0;
-    width:100%;
-    height:50px;
-    border-top: 1px solid #E5E5FF;
-    background-color: #F5F5FF;
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid #e5e5ff;
+    background-color: #f5f5ff;
     z-index: 999;
+    /* ↓追加 */
+    transition: 0.5s;
   }
-  #startVideoButton, #startScreenShareButton, #showLinkButton{
-    display:none;
+  #startVideoButton,
+  #startScreenShareButton,
+  #showLinkButton {
+    display: none;
   }
   .imgButton {
-    width:33%;
-    height:100%;
-    float:left;
+    width: 33%;
+    height: 100%;
+    float: left;
   }
-  .imgButton img{
+  .imgButton img {
     height: 100%;
     margin-bottom: 10px;
   }
@@ -46,145 +50,147 @@ video::-webkit-media-controls-panel {
     height: 360px;
   }
   #itemArea {
-    position:fixed;
+    position: fixed;
     top: 30px;
     left: 0;
-    width:60px;
-    padding:5px;
-    height:100%;
-    border-right: 1px solid #E5E5FF;
-    border-bottom: 1px solid #E5E5FF;
-    background-color: #F5F5FF;
+    width: 60px;
+    padding: 5px;
+    height: 100%;
+    border-right: 1px solid #e5e5ff;
+    border-bottom: 1px solid #e5e5ff;
+    background-color: #f5f5ff;
     z-index: 999;
   }
-div#videoArea{
-    position:relative;
-    top:30px;
+  div#videoArea {
+    position: relative;
+    top: 30px;
     left: 0;
-    padding-left:80px;
+    padding-left: 80px;
     background-color: black;
     height: 100%;
-    width:100%;
+    width: 100%;
     display: flex;
   }
-  .imgButton img{
+  .imgButton img {
     width: 100%;
     margin-bottom: 10px;
   }
 }
 
-html, body {
-  width:100%;
-  height:100%;
+html,
+body {
+  width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   position: relative;
-  background-color:black;
+  background-color: black;
 }
 #base {
   position: relative;
-  height:100%;
+  height: 100%;
 }
 .imgButton {
-  background-color:rgba(255,255,255,0);
-  border: 0 solid #FFF;
+  background-color: rgba(255, 255, 255, 0);
+  border: 0 solid #fff;
   cursor: pointer;
 }
 
-#header{
+#header {
   position: fixed;
   z-index: 999;
-  width:100%;
-  top:0;
-  left:0;
+  width: 100%;
+  top: 0;
+  left: 0;
   background-color: #666;
-  color:white;
-  padding-left:5px;
+  color: white;
+  padding-left: 5px;
   border-bottom: 1px solid #999;
-  margin:0;
+  margin: 0;
   font-family: arial, sans-serif;
-  font-size:15px;
-  height:30px;
+  font-size: 15px;
+  height: 30px;
 }
 
 #header img {
-  margin-top:5px;
-  height:20px;
+  margin-top: 5px;
+  height: 20px;
 }
 
-.dialog{
+.dialog {
   position: fixed;
-  background-color:white;
-  top:40%;
-  left:25%;
-  width:50%;
-  height:20%;
+  background-color: white;
+  top: 40%;
+  left: 25%;
+  width: 50%;
+  height: 20%;
   border-radius: 10px;
   z-index: 9999;
-  text-align:center;
-  padding:10px;
+  text-align: center;
+  padding: 10px;
   display: table-cell;
-	vertical-align: middle;
+  vertical-align: middle;
   display: none;
   opacity: 0;
 }
 
 .square_btn {
-    position: relative;
-    display: inline-block;
-    padding: 0.25em 0.5em;
-    text-decoration: none;
-    color: #FFF;
-    background: #666666;/*背景色*/
-    border-bottom: solid 2px #333333;/*少し濃い目の色に*/
-    border-radius: 4px;/*角の丸み*/
-    box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 2px 2px rgba(0, 0, 0, 0.19);
-    font-weight: bold;
+  position: relative;
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  color: #fff;
+  background: #666666; /*背景色*/
+  border-bottom: solid 2px #333333; /*少し濃い目の色に*/
+  border-radius: 4px; /*角の丸み*/
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 2px 2px rgba(0, 0, 0, 0.19);
+  font-weight: bold;
 }
 
 .square_btn:active {
-    border-bottom: solid 2px #AAA;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.30);
+  border-bottom: solid 2px #aaa;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
 .inputText {
-  font-size:30px;
+  font-size: 30px;
   line-height: 30px;
-  height:40px;
-  padding:5px;
+  height: 40px;
+  padding: 5px;
   border-radius: 7px 0 0 7px;
   border-color: #666;
   box-sizing: border-box;
-  position:relative;
-  top:-4px;
+  position: relative;
+  top: -4px;
 }
 
 .textButton {
   box-sizing: border-box;
-  height:40px;
+  height: 40px;
   border-radius: 0 7px 7px 0;
-  position:relative;
-  top:0;
+  position: relative;
+  top: 0;
 }
 
-.textButton img{
+.textButton img {
   height: 100%;
 }
 
 .inputArea {
-  position:relative;
+  position: relative;
 }
 
-#video_wrap{
+#video_wrap {
   display: flex;
   flex-wrap: wrap;
 }
 
-#my_video_area{
+#my_video_area {
   position: relative;
 }
 
-.username{
+.username {
   position: absolute;
   top: 0;
   right: 0;
@@ -197,11 +203,11 @@ html, body {
   text-align: center;
 }
 
-.remoteArea{
+.remoteArea {
   position: relative;
 }
 
-.remoteName{
+.remoteName {
   position: absolute;
   top: 0;
   right: 0;
@@ -214,10 +220,77 @@ html, body {
   text-align: center;
 }
 
-.handImg{
+.handImg {
   position: absolute;
   bottom: 0;
   right: 0;
   width: 100px;
   height: 100px;
+}
+
+/* 以下、追加 */
+#itemArea.itemArea-open {
+  width: 70%;
+  background-color: rgba(245, 245, 255, 0.5);
+}
+
+.setting-area {
+  margin: 5px 10px;
+  display: none;
+  flex-direction: column;
+  text-align: center;
+  border: solid 3px #333333;
+  border-radius: 5px;
+}
+
+.setting-area p {
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.input-setting {
+  font-size: 16px;
+  margin-bottom: 5px;
+  width: 60px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.set-button button {
+  width: 80px;
+  height: 40px;
+  font-size: 20px;
+  color: white;
+  background-color: rgb(0, 102, 255);
+  border-radius: 0.5em;
+  margin-top: 10px;
+}
+.setting-text {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+#admin-setting {
+  margin: 0 10px;
+  background-color: rgba(255, 136, 0, 0.5);
+  display: none;
+  border: solid 3px #ff0000;
+  border-radius: 5px;
+  text-align: center;
+}
+#admin-setting p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+#admin-setting .p1 {
+  font-size: 16px;
+}
+#admin-setting .p2 {
+  font-size: 14px;
+  color: #ff0000;
+}
+
+#encrypted-area {
+  display: none;
 }
