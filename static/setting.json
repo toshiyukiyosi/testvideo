@@ -1,0 +1,11 @@
+{
+  "video": {
+    "width": "720",
+    "height": "480",
+    "frameRate": "30"
+  },
+  "update": {
+    "ipAddress": "",
+    "date": "2021-09-27T04:58:53.945Z"
+  }
+}
