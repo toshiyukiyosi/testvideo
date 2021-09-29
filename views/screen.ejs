@@ -22,11 +22,86 @@
             <button id="lockButton" class="imgButton" onclick="lockRoom();"><img src="images/unlock.png" /></button>
             <button id="lockButton" class="imgButton" onclick="handUp();"><img src="images/hand.png" /></button>
             <button id="stopButton" class="imgButton" onclick="stop();"><img src="images/switch.png" /></button>
+            <button id="setting-open-Button" class="imgButton" onclick="settingOpen();"><img
+                src="images/settings.svg" /></button>
+            <button id="setting-close-Button" class="imgButton" onclick="settingClose();" style="display: none;"><img
+                src="images/settings.svg" /></button>
+
+
+        </div>
+        <p>【映像設定】</p>
+        <div class="setting-container">
+            <div>
+                <label><input type="radio" name="video-setting" id="" value="HD-high-quality">高画質(16：9)</label>
+
+                <label><input type="radio" name="video-setting" id="normal-set" value="HD-normal-quality"
+                        checked>標準　(16：9)</label>
+
+                <label><input type="radio" name="video-setting" id="" value="HD-low-quality">低画質(16：9)</label>
+            </div>
+            <div>
+                <label><input type="radio" name="video-setting" id="" value="SD-normal-quality">標準　(
+                    4：3)</label>
+
+                <label><input type="radio" name="video-setting" id="" value="SD-low-quality">低画質( 4：3)</label>
+            </div>
+        </div>
+        <p class="setting-text">手動入力</p>
+        <div>
+            <label for="">横幅：<input type="text" name="" id="set-width" class="input-setting"></label>
+        </div>
+        <div>
+            <label for="">縦幅：<input type="text" name="" id="set-height" class="input-setting"></label>
+        </div>
+        <div>
+            <label for="">FPS： <input type="text" name="" id="set-fps" class="input-setting"></label>
+        </div>
+        <div>
+            <label><input type="checkbox" name="" id="save">設定を保存する</label>
+
+        </div>
+        <div class="set-button">
+            <button onclick="setApplyConstraints();">設定</button>
+            <button style="background-color: darkgrey; color: black;" onclick="settingClose();">閉じる</button>
+        </div>
+    </div>
+
+        <div id="admin-setting">
+            <p class="p1">【admin-setting】</p>
+            <p class="p2">!!warning!! Change server settings</p>
+            <div class="admin-input-area">
+                <form action="/setting" method="post">
+                    <div>
+                        <label>width:<input type="text" name="width"></label>
+                    </div>
+                    <div>
+                        <label>height:<input type="text" name="height"></label>
+                    </div>
+                    <div>
+                        <label>frameRate:<input type="text" name="frameRate"></label>
+                    </div>
+                    <div>
+                        <label>ID:<input type="text" name="adminId"></label>
+                    </div>
+                    <div>
+                        <label>Password:<input type="password" name="adminPassword"></label>
+                    </div>
+                    <input id="location-path" type="hidden" name="path" value="">
+                    <button class="set-button" type="submit"
+                        style="background-color: darkgrey; color: black;">setting</button>
+                </form>
+            </div>
+            <div id="encrypted-area">
+                <form action="/encryption" method="post">
+                    <label>encryption:<input type="text" name="plain_text"></label>
+                    <button type="submit">encryption</button>
+                </form>
+            </div>
         </div>
         <div id="videoArea">
             <div id="video_wrap">
                 <div id="my_video_area">
-                    
+
                     <video id="localVideo" class="video" autoplay muted></video>
                     <span class="username"><%= user %> </span><!-- /.username -->
                 </div><!-- /.my_video_area -->
