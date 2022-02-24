@@ -9,75 +9,6 @@ var mediaConstraints = {
   },
 };
 
-// 映像設定変数 初期化
-var videoWidth = null;
-var videoHeight = null;
-var videoFps = null;
-
-// 管理者設定用のために現在URLを取得
-// let locationURL = location.href;
-let locationURL = location.pathname;
-document.querySelector("#location-path").defaultValue = locationURL;
-
-/**
- * 映像初期設定
- * 設定保存されていれば、cookieに保存されている
- * 保存されていれば、数値をセット
- */
-// cookieを配列で取得
-let cookieArr = getCookieArray();
-// 映像設定のcookieの存在判定
-if (!cookieArr["videoWidth"]) {
-  // setting.jsonファイルを読み込み
-  fetch("../setting.json")
-    .then((response) => {
-      return response.json(); //BodyからJSONを返す
-    })
-    .then((result) => {
-      setting(result); //取得したJSONデータをsetting関数に渡す
-    })
-    .catch((e) => {
-      console.log(e); //例外処理
-      // 設定ファイルの読み込みに失敗した場合、以下の設定にする
-      videoWidth = 640;
-      videoHeight = 360;
-      videoFps = 30;
-    });
-
-  //JSONデータを引数に受け取り、初期設定
-  function setting(jsonObj) {
-    const settingData = jsonObj;
-    // 現在の設定を確認
-    console.log(settingData);
-    let setWidth = settingData.video.width;
-    let setHeight = settingData.video.height;
-    let setFps = settingData.video.frameRate;
-    videoWidth = setWidth;
-    videoHeight = setHeight;
-    videoFps = setFps;
-  }
-}
-// cookieが保存されていれば、cookieの数値を設定
-else {
-  var videoWidth = cookieArr["videoWidth"];
-  var videoHeight = cookieArr["videoHeight"];
-  var videoFps = cookieArr["videoFps"];
-  let expires = timeLimit(32); //32日間、約一ヶ月延長
-  document.cookie = "videoWidth=" + videoWidth + ";" + expires;
-  secure;
-  document.cookie = "videoHeight=" + videoHeight + ";" + expires;
-  secure;
-  document.cookie = "videoFps=" + videoFps + ";" + expires;
-  secure;
-  document.querySelector("#normal-set").checked = false;
-}
-
-// webRTCの設定情報取得関数
-function getVideoStatus() {
-  let constraints = navigator.mediaDevices.getSupportedConstraints();
-  console.log(constraints);
-}
-
 var selfId;
 var myName;
 function toFullScreenable(target) {
@@ -362,144 +293,6 @@ function initVideoArea() {
   }, 500);
 }
 
-/**
- * 映像設定画面オープン
- * 設定を保存にチェックされていれば、cookieに保存
- */
-function settingOpen() {
-  document.querySelector("#setting-open-Button").style.display = "none";
-  document.querySelector("#setting-close-Button").style.display = "block";
-  document.querySelector("#set-width").value = videoWidth;
-  document.querySelector("#set-height").value = videoHeight;
-  document.querySelector("#set-fps").value = videoFps;
-  document.querySelector("#itemArea").className = "itemArea-open";
-  setTimeout(function () {
-    document.querySelector(".setting-area").style.display = "flex";
-  }, 500);
-}
-/**
- * 映像設定画面クローズ
- */
-function settingClose() {
-  document.querySelector("#setting-close-Button").style.display = "none";
-  document.querySelector("#setting-open-Button").style.display = "block";
-  document.querySelector(".setting-area").style.display = "none";
-  document.querySelector("#itemArea").className = "";
-}
-
-/**
- * 映像設定 変更
- * 設定を保存にチェックされていれば、cookieに保存
- */
-function setApplyConstraints() {
-  videoWidth = document.querySelector("#set-width").value;
-  videoHeight = document.querySelector("#set-height").value;
-  videoFps = document.querySelector("#set-fps").value;
-  let saveCheck = document.querySelector("#save");
-  if (saveCheck.checked) {
-    let expires = timeLimit(32); //32日間、約一ヶ月を設定
-    document.cookie = "videoWidth=" + videoWidth + ";" + expires;
-    secure;
-    document.cookie = "videoHeight=" + videoHeight + ";" + expires;
-    secure;
-    document.cookie = "videoFps=" + videoFps + ";" + expires;
-    secure;
-  }
-
-  let videoTrack = localStream.getVideoTracks()[0];
-  let currentConstrains = videoTrack.getConstraints();
-  console.log("変更前の値:", currentConstrains);
-  videoTrack
-    .applyConstraints({
-      width: videoWidth,
-      height: videoHeight,
-      frameRate: videoFps,
-    })
-    .then(() => {
-      currentConstrains = videoTrack.getConstraints();
-      console.log("映像の設定値:", currentConstrains);
-      document.querySelector(".setting-area").style.display = "none";
-      document.querySelector("#itemArea").className = "";
-      // alert("映像の設定が完了しました\n\n横幅：" + videoWidth + "\n縦幅：" + videoHeight + "\nフレームレート：" + videoFps);
-      document.querySelector("#setting-close-Button").style.display = "none";
-      document.querySelector("#setting-open-Button").style.display = "block";
-    })
-    .catch((e) => {
-      console.log("制約を設定できませんでした:", e);
-      alert("ブラウザが対応していません\n推奨ブラウザ：Google chrome");
-    });
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  let checkOption = document.getElementsByName("video-setting");
-  checkOption.forEach(function (e) {
-    e.addEventListener("click", function () {
-      // console.log(e.value)
-      if (e.value === "HD-high-quality") {
-        document.querySelector("#set-width").value = 1280;
-        document.querySelector("#set-height").value = 720;
-        document.querySelector("#set-fps").value = 30;
-      } else if (e.value === "HD-normal-quality") {
-        document.querySelector("#set-width").value = 640;
-        document.querySelector("#set-height").value = 360;
-        document.querySelector("#set-fps").value = 30;
-      } else if (e.value === "HD-low-quality") {
-        document.querySelector("#set-width").value = 426;
-        document.querySelector("#set-height").value = 240;
-        document.querySelector("#set-fps").value = 30;
-      } else if (e.value === "SD-normal-quality") {
-        document.querySelector("#set-width").value = 640;
-        document.querySelector("#set-height").value = 480;
-        document.querySelector("#set-fps").value = 30;
-      } else if (e.value === "SD-low-quality") {
-        document.querySelector("#set-width").value = 320;
-        document.querySelector("#set-height").value = 240;
-        document.querySelector("#set-fps").value = 30;
-      }
-    });
-  });
-});
-
-// cookieを連想配列に格納
-function getCookieArray() {
-  var arr = new Array();
-  if (document.cookie != "") {
-    var tmp = document.cookie.split("; ");
-    for (var i = 0; i < tmp.length; i++) {
-      var data = tmp[i].split("=");
-      arr[data[0]] = decodeURIComponent(data[1]);
-    }
-  }
-  return arr;
-}
-
-// cookieの有効期限取得
-function timeLimit(setDate) {
-  let nowdate = new Date(); //現在の日付データを取得
-  nowdate.setTime(nowdate.getTime() + setDate * 24 * 60 * 60 * 1000); //setDateが30なら、1ヶ月後の日付データを作成
-  let limitDate = nowdate.toGMTString(); //GMT形式に変換して変数kigendateに格納
-  let expires = "expires=" + limitDate + "; ";
-  return expires;
-}
-
-// 管理者設定画面
-document.addEventListener("keydown", (event) => {
-  let adminSettingArea = document.querySelector("#admin-setting");
-  let encryptedArea = document.querySelector("#encrypted-area");
-  if (event.ctrlKey && event.code === "Slash") {
-    if (adminSettingArea.style.display === "none") {
-      adminSettingArea.style.display = "block";
-    } else {
-      adminSettingArea.style.display = "none";
-    }
-  } else if (event.ctrlKey && event.code === "IntlRo") {
-    if (adminSettingArea.style.display === "block") {
-      encryptedArea.style.display = "block";
-    }
-  }
-});
-
-
 function startVideo() {
   reloadFunction = startVideo;
   // navigator.getUserMedia({ video: true, audio: true },
@@ -515,13 +308,14 @@ function startVideo() {
   //         return;
   //   var medias = { video: true, audio: true };
   let medias = {
-    video: true,
     audio: true,
-    // 以下、追加
-    // 各数値は最大値の設定
-    width: { max: videoWidth },
-    height: { max: videoHeight },
-    frameRate: { max: videoFps },
+    video: {
+      //minは最小設定 idealは理想設定(ﾌﾞﾗｳｻﾞ・機器による)
+      width: { min: 320, ideal: videoWidth }, //横幅
+      height: { min: 240, ideal: videoHeight }, //縦幅
+      frameRate: { min: 15, ideal: videoFps }, //fps
+      aspectRatio: aspectRatio, //アスペクト比
+    },
   };
   navigator.mediaDevices
     .getUserMedia(medias)
@@ -683,15 +477,19 @@ function unlockRoom() {
 }
 
 function handUp() {
-  socket.emit("handup", socket.id);
-  var myVideoArea = document.getElementById("my_video_area");
-  var myhand = document.createElement("img");
-  myhand.src = "images/hand.png";
-  myhand.className = "handImg";
-  myVideoArea.appendChild(myhand);
-  setTimeout(function () {
-    myVideoArea.removeChild(myhand);
-  }, 15000);
+  if (!document.getElementsByClassName("handImg").length) {
+    var myVideoArea = document.getElementById("my_video_area");
+    socket.emit("handup", socket.id);
+    var myhand = document.createElement("img");
+    myhand.src = "images/hand.png";
+    myhand.className = "handImg";
+    myVideoArea.appendChild(myhand);
+    setTimeout(function () {
+      myVideoArea.removeChild(myhand);
+    }, 15000);
+  } else {
+    document.getElementsByClassName("handImg")[0].remove();
+  }
 }
 
 function otherHandUp(remoteId) {
