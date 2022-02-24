@@ -60,6 +60,7 @@ video::-webkit-media-controls-panel {
     border-bottom: 1px solid #e5e5ff;
     background-color: #f5f5ff;
     z-index: 999;
+    transition: 0.5s;
   }
   div#videoArea {
     position: relative;
@@ -231,7 +232,7 @@ body {
 /* 以下、追加 */
 #itemArea.itemArea-open {
   width: 70%;
-  background-color: rgba(245, 245, 255, 0.5);
+  background-color: rgba(190, 219, 228, 0.5);
 }
 
 .setting-area {
@@ -241,6 +242,10 @@ body {
   text-align: center;
   border: solid 3px #333333;
   border-radius: 5px;
+}
+
+.video-setting-title {
+  background:linear-gradient(transparent 50%, rgba(0, 0, 0, 0) 50%, #ff6);
 }
 
 .setting-area p {
@@ -258,20 +263,24 @@ body {
   font-weight: bold;
 }
 .set-button button {
-  width: 80px;
+  width: auto;
   height: 40px;
-  font-size: 20px;
+  margin: 0 5px 5px 5px;
+  font-size: 1.25rem;
   color: white;
   background-color: rgb(0, 102, 255);
   border-radius: 0.5em;
   margin-top: 10px;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
 }
+
 .setting-text {
-  font-size: 14px;
-  font-weight: normal;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 #admin-setting {
+  display: none;
   margin: 0 10px;
   background-color: rgba(255, 136, 0, 0.5);
   display: none;
