@@ -147,6 +147,11 @@ app.get("/:channel", (req, res) => {
       title: "Express",
       user: req.user,
     });
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin"
+    });
   } else {
     res.redirect("/login");
   }
@@ -228,19 +233,15 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post("/setting", (req, res) => {
   //IDとハッシュ化したパスワードを設定、（今後、SQLにIDと共に保存推奨）
-  let adminId = "admin";
   var hashedPassword =
     "$2b$10$hJrQLuV0cDwt3UECMhihmuJWrogFNJbUQGoEwaVwOBaG26ID687di";
 
   // 簡易認証（今後、SQLからデータを取り出しの認証を推奨）
-  let checkId = req.body.adminId;
   let checkPassword = req.body.adminPassword;
-  console.log(checkId + "_" + checkPassword);
-
   // ハッシュ化したパスワードと照合、合っていればtrueが返ってくる
   let passCheck = hashedPasswordCheck(checkPassword, hashedPassword);
 
-  if (checkId === adminId && passCheck) {
+  if (passCheck) {
     // 設定ファイル読み込み
     let settingData = JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "./static/setting.json"))
@@ -260,6 +261,33 @@ app.post("/setting", (req, res) => {
     // リロード処理(web会議URLに戻る)
     let pathName = req.body.path; //web会議 部屋名
     res.writeHead(303, { Location: pathName }); //２重送信防止
+    res.end();
+  } else {
+    res.send("ERROR: Password is incorrect");
+  }
+});
+
+app.post("/setting_remove", (req, res) => {
+  var hashedPassword =
+    "$2b$10$hJrQLuV0cDwt3UECMhihmuJWrogFNJbUQGoEwaVwOBaG26ID687di";
+  let checkPassword = req.body.adminPassword;
+  let passCheck = hashedPasswordCheck(checkPassword, hashedPassword);
+  if (passCheck) {
+    let settingData = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "./static/setting.json"))
+    );
+    settingData.video.width = "";
+    settingData.video.height = "";
+    settingData.video.frameRate = "";
+    settingData.update.ipAddress = req.ip;
+    settingData.update.date = new Date();
+    fs.writeFileSync(
+      path.resolve(__dirname, "./static/setting.json"),
+      JSON.stringify(settingData, null, 2),
+      "utf-8"
+    );
+    let pathName = req.body.path;
+    res.writeHead(303, { Location: pathName });
     res.end();
   } else {
     res.send("ERROR: Password is incorrect");

@@ -307,16 +307,21 @@ function startVideo() {
   //         console.error('fail ' + error.code);
   //         return;
   //   var medias = { video: true, audio: true };
-  let medias = {
-    audio: true,
-    video: {
-      //minは最小設定 idealは理想設定(ﾌﾞﾗｳｻﾞ・機器による)
-      width: { min: 320, ideal: videoWidth }, //横幅
-      height: { min: 240, ideal: videoHeight }, //縦幅
-      frameRate: { min: 15, ideal: videoFps }, //fps
-      aspectRatio: aspectRatio, //アスペクト比
-    },
-  };
+  //設定値がある場合、映像設定を行う。
+  if (videoWidth) {
+    var medias = {
+      audio: true,
+      video: {
+        //minは最小設定 idealは理想設定(ﾌﾞﾗｳｻﾞ・機器による)
+        width: { min: 320, ideal: videoWidth }, //横幅
+        height: { min: 240, ideal: videoHeight }, //縦幅
+        frameRate: { min: 15, ideal: videoFps }, //fps
+        aspectRatio: aspectRatio, //アスペクト比
+      },
+    };
+  } else { //設定値がない場合は各所の環境に依存させる
+    var medias = { video: true, audio: true };
+  }
   navigator.mediaDevices
     .getUserMedia(medias)
     .then(function (stream) {

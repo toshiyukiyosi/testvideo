@@ -249,7 +249,7 @@ body {
 }
 
 .setting-area p {
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
   margin: 0;
   font-weight: bold;
@@ -266,7 +266,7 @@ body {
   width: auto;
   height: 40px;
   margin: 0 5px 5px 5px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: white;
   background-color: rgb(0, 102, 255);
   border-radius: 0.5em;
@@ -278,6 +278,12 @@ body {
   font-size: 1rem;
   font-weight: bold;
 }
+
+.recording-button {
+  display: flex;
+  justify-content: center;
+}
+
 
 #admin-setting {
   display: none;
