@@ -5,7 +5,8 @@ var videoFps = null;
 var aspectRatio = null;
 
 // 管理者設定用のために現在URLを取得
-document.querySelector("#location-path").defaultValue = location.pathname;
+document.querySelector("#location-path-1").defaultValue = location.pathname;
+document.querySelector("#location-path-2").defaultValue = location.pathname;
 
 /**
  * 映像初期設定
@@ -28,9 +29,9 @@ if (!cookieArr["videoWidth"]) {
     .catch((e) => {
       console.log(e); //例外処理
       // 設定ファイルの読み込みに失敗した場合、以下の設定にする
-      videoWidth = 640;
-      videoHeight = 360;
-      videoFps = 30;
+      videoWidth = "640";
+      videoHeight = "360";
+      videoFps = "30";
     });
 }
 // cookieが保存されていれば、cookieの数値を再設定
@@ -237,7 +238,7 @@ document.addEventListener("keydown", (event) => {
 
 /**
  * 管理者設定前の確認メッセージ
- * @returns {bool}
+ * @returns { bool }
  */
 function adminSettingCheck() {
   if (window.confirm("サーバーの設定が変更されます\n本当によろしいですか？")) {
@@ -278,3 +279,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+if (crossOriginIsolated) {
+  console.log("CORS:OK");
+} else {
+  console.log("CORS:No");
+}
