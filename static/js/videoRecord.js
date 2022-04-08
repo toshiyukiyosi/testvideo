@@ -20,7 +20,6 @@ class VideoRecord {
     $recordStop,
     $playStart,
     $download,
-    // $message,
     mimeType,
   }) {
     // 各要素
@@ -34,7 +33,7 @@ class VideoRecord {
     this.$btnRecord = document.getElementById("btn-record"); //録画開始ボタン
     this.$btnDownload = document.getElementById("btn-download"); //ダウンロードボタン
     this.checkffmpeg = document.getElementById("chkffmpeg"); //ffmpeg変換チェックボックス
-    this.url;
+    this.url; //ダウンロードボタンリンク
 
     this.mimeType = mimeType;
     this.mimeTypeName;
@@ -82,6 +81,8 @@ class VideoRecord {
 
     //メッセージの初期化
     this.$message.textContent = "";
+
+    //録画開始ボタン設定初期化
     this.$btnDownload.style.backgroundColor = "";
     this.$btnRecord.textContent = "録画開始";
 
@@ -91,7 +92,6 @@ class VideoRecord {
         audio: true,
         video: true,
       };
-
       this.mediaStream = await navigator.mediaDevices.getDisplayMedia(
         mediaDevicesConstracts
       );
@@ -117,12 +117,13 @@ class VideoRecord {
       this.recordedChunks.push(event.data);
     //録画開始カウントダウン
     this.countDown();
-    //カウントダウン５秒間処理停止
+    //カウントダウン中５秒間処理を停止
     await new Promise((resolve) => setTimeout(resolve, 5000));
     // 録画開始
     this.mediaRecorder.start();
 
     console.log("this.superBuffer", this.superBuffer);
+    //メモリにデータがある場合に削除処理
     if (this.superBuffer) {
       //メモリ開放
       URL.revokeObjectURL(this.superBuffer);
@@ -165,6 +166,7 @@ class VideoRecord {
   stopRecording() {
     //録画停止
     this.mediaRecorder.stop();
+    //MP4変換処理のチェックボックスが入っていればffmpeg変換処理
     if (this.checkffmpeg.checked) {
       const transcode = async () => {
         const { createFFmpeg, fetchFile } = FFmpeg;
@@ -176,9 +178,14 @@ class VideoRecord {
         this.$message.textContent = "処理エンジン読込中 ffmpeg-core.js";
         await ffmpeg.load();
         this.$message.textContent = "映像処理中...";
-        ffmpeg.FS("writeFile", name, await fetchFile(new Uint8Array(
-        await new Blob(this.recordedChunks).arrayBuffer())));
-        const width = 610;
+        ffmpeg.FS(
+          "writeFile",
+          name,
+          await fetchFile(
+            new Uint8Array(await new Blob(this.recordedChunks).arrayBuffer())
+          )
+        );
+        // const width = 610;
         // await ffmpeg.run('-i', name, '-vf', `scale=${width}:-1`, 'output.mp4'); // NG
         const resize = selResize.value;
         if (resize == "リサイズ無し") {
@@ -215,7 +222,7 @@ class VideoRecord {
    */
   startPlaying() {
     this.settingClose();
-    //webm形式でblobで取得
+    //webm形式 Blobで取得
     modal.style.display = "block";
 
     this.superBuffer = new Blob(this.recordedChunks, { type: "video/webm" });
@@ -233,6 +240,7 @@ class VideoRecord {
    * ダウンロード
    */
   download() {
+    // 拡張子設定
     if (!this.checkffmpeg.checked) {
       if (
         this.mimeType === "video/webm;codecs=vp8" ||
@@ -247,6 +255,7 @@ class VideoRecord {
       this.url = URL.createObjectURL(blob);
     }
 
+    // ファイル名・ダウンロードリンク設定
     const meetingName = location.pathname; //会議名
     // const size = size.value; //リサイズ数値
     const date = new Date();
@@ -395,20 +404,7 @@ function outsideClose(e) {
   }
 }
 
-export class FFmpegEngine {
-  constructor() {
-    // this.videoData = videoData;
-    this.FFmpeg = FFmpeg;
-    this.$btnprepare = document.getElementById("btnprepare");
-    this.$btnrecord = document.getElementById("btnrecord");
-    this.$btndownload = document.getElementById("btndownload");
-    this.$videoArea = document.getElementById("video_wrap");
-    this.$message = document.getElementById("message");
-    this.$selResize = document.getElementById("selResize");
-    this.$mimeType = document.getElementById("mimeType").value;
-    this.$videoObj;
-  }
-}
+
 
 /**
  * ffmpeg.wasm
