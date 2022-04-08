@@ -29,9 +29,9 @@ if (!cookieArr["videoWidth"]) {
     .catch((e) => {
       console.log(e); //例外処理
       // 設定ファイルの読み込みに失敗した場合、以下の設定にする
-      videoWidth = "640";
-      videoHeight = "360";
-      videoFps = "30";
+      videoWidth = "";
+      videoHeight = "";
+      videoFps = "";
     });
 }
 // cookieが保存されていれば、cookieの数値を再設定
@@ -75,6 +75,9 @@ function settingWithcookie(cookieArr) {
   }
   if (videoWidth === "426" && videoHeight === "240") {
     document.getElementById("HD-low-quality").checked = true;
+  }
+  if (videoWidth === "1280" && videoHeight === "960") {
+    document.getElementById("SD-high-quality").checked = true;
   }
   if (videoWidth === "640" && videoHeight === "480") {
     document.getElementById("SD-normal-quality").checked = true;
@@ -184,6 +187,24 @@ function settingClose() {
   document.querySelector("#itemArea").className = "";
 }
 
+
+function recordSetting() {
+  let settingDisplay = document.defaultView.getComputedStyle(
+    document.getElementById("recording-setting"),
+    null
+  ).display;
+  let recordSetting = document.getElementById("recording-setting");
+  let screenRecordBtn = document.getElementById("screen-record-btn");
+  if (settingDisplay === "none") {
+    recordSetting.style.display = "block";
+    screenRecordBtn.textContent = "画面録画 ▲";
+  }
+  else if (settingDisplay === "block") {
+    recordSetting.style.display = "none";
+    screenRecordBtn.textContent = "画面録画 ▼";
+  }
+}
+
 /**
  * cookieを連想配列に格納
  * @returns { Array }
@@ -267,6 +288,10 @@ window.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#set-width").value = 426;
         document.querySelector("#set-height").value = 240;
         document.querySelector("#set-fps").value = 30;
+      } else if (e.value === "SD-high-quality") {
+        document.querySelector("#set-width").value = 1280;
+        document.querySelector("#set-height").value = 960;
+        document.querySelector("#set-fps").value = 30;
       } else if (e.value === "SD-normal-quality") {
         document.querySelector("#set-width").value = 640;
         document.querySelector("#set-height").value = 480;
@@ -285,3 +310,5 @@ if (crossOriginIsolated) {
 } else {
   console.log("CORS:No");
 }
+
+

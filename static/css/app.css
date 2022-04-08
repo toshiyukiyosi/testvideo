@@ -25,7 +25,7 @@ video::-webkit-media-controls-panel {
     height: 50px;
     border-top: 1px solid #e5e5ff;
     background-color: #f5f5ff;
-    z-index: 999;
+    z-index: 998;
     /* ↓追加 */
     transition: 0.5s;
   }
@@ -59,7 +59,7 @@ video::-webkit-media-controls-panel {
     border-right: 1px solid #e5e5ff;
     border-bottom: 1px solid #e5e5ff;
     background-color: #f5f5ff;
-    z-index: 999;
+    z-index: 998;
     transition: 0.5s;
   }
   div#videoArea {
@@ -232,7 +232,7 @@ body {
 /* 以下、追加 */
 #itemArea.itemArea-open {
   width: 70%;
-  background-color: rgba(190, 219, 228, 0.5);
+  background-color: rgba(186, 208, 214, 0.7);
 }
 
 .setting-area {
@@ -245,7 +245,7 @@ body {
 }
 
 .video-setting-title {
-  background:linear-gradient(transparent 50%, rgba(0, 0, 0, 0) 50%, #ff6);
+  background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0) 50%, #ff6);
 }
 
 .setting-area p {
@@ -253,7 +253,7 @@ body {
   text-align: center;
   margin: 0;
   font-weight: bold;
-  margin: 10px 0;
+  background-color: rgba(131, 168, 189, 0.5);
 }
 .input-setting {
   font-size: 16px;
@@ -262,21 +262,31 @@ body {
   border-radius: 5px;
   font-weight: bold;
 }
-.set-button button {
+
+#video-setting-btn {
   width: auto;
   height: 40px;
   margin: 0 5px 5px 5px;
   font-size: 1rem;
   color: white;
-  background-color: rgb(0, 102, 255);
   border-radius: 0.5em;
   margin-top: 10px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
+
 .setting-text {
   font-size: 1rem;
   font-weight: bold;
+}
+
+.set-button {
+  margin-bottom: 10px;
+}
+
+
+#recording-setting {
+  display: none;
 }
 
 .recording-button {
@@ -284,6 +294,54 @@ body {
   justify-content: center;
 }
 
+button#btn-prepare {
+  font-size: 0.75rem;
+  border: 2px solid #5c5a5a;
+  margin: 0 2px;
+}
+
+button#btn-record {
+  font-size: 0.75rem;
+  border: 2px solid #5c5a5a;
+  margin: 0 2px;
+}
+
+button#btn-stop {
+  font-size: 0.75rem;
+  border: 2px solid #5c5a5a;
+  margin: 0 2px;
+}
+
+button#btn-video-start {
+  font-size: 0.75rem;
+  border: 2px solid #5c5a5a;
+  margin: 0 2px;
+}
+
+button#btn-download {
+  font-size: 0.75rem;
+  border: 2px solid #5c5a5a;
+  margin: 0 2px;
+}
+
+
+
+button#blink {
+  font-size: 0.75rem;
+  -webkit-animation: blink 1s ease-in-out infinite alternate;
+  animation: blink 1s ease-in-out infinite alternate;
+  background-color: crimson;
+  color: white;
+}
+
+@keyframes blink {
+  0% {
+    border: 3px solid #cc2200;
+  }
+  100% {
+    border: 3px solid #efefef;
+  }
+}
 
 #admin-setting {
   display: none;
@@ -308,4 +366,31 @@ body {
 
 #encrypted-area {
   display: none;
+}
+
+/* モーダルウインドウ */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #f4f4f4;
+  margin: 0;
+  /* width: 30%; */
+  box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 7px 20px 0 rgba(0,0,0,0.17);
+  animation-name: modalopen;
+  animation-duration: 1s;
+}
+
+@keyframes modalopen {
+  from {opacity: 0}
+  to {opacity: 1}
 }
