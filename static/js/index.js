@@ -313,9 +313,9 @@ function startVideo() {
       audio: true,
       video: {
         //minは最小設定 idealは理想設定(ﾌﾞﾗｳｻﾞ・機器による)
-        width: { min: 320, ideal: videoWidth }, //横幅
-        height: { min: 240, ideal: videoHeight }, //縦幅
-        frameRate: { min: 15, ideal: videoFps }, //fps
+        width: { min: 160, ideal: videoWidth }, //横幅
+        height: { min: 120, ideal: videoHeight }, //縦幅
+        frameRate: { min: 10, ideal: videoFps }, //fps
         aspectRatio: aspectRatio, //アスペクト比
       },
     };
@@ -332,7 +332,7 @@ function startVideo() {
       }
     })
     .catch(function (error) {
-      console.error("fail" + error.code);
+      console.error("fail:" + error);
       return;
     });
 }
@@ -481,34 +481,45 @@ function unlockRoom() {
   //u cant unlock. everyone must out.
 }
 
+let myHandTimer;
 function handUp() {
-  if (!document.getElementsByClassName("handImg").length) {
+  socket.emit("handup", socket.id);
+  if (!document.getElementById("myHand")) {
     var myVideoArea = document.getElementById("my_video_area");
-    socket.emit("handup", socket.id);
     var myhand = document.createElement("img");
     myhand.src = "images/hand.png";
     myhand.className = "handImg";
+    myhand.id = "myHand";
     myVideoArea.appendChild(myhand);
-    setTimeout(function () {
+    myHandTimer = setTimeout(function () {
       myVideoArea.removeChild(myhand);
     }, 15000);
   } else {
-    document.getElementsByClassName("handImg")[0].remove();
+    clearTimeout(myHandTimer);
+    document.getElementById("myHand").remove();
   }
 }
 
+let otherHandTimer;
 function otherHandUp(remoteId) {
-  var otherHandUpId = "area_" + remoteId.id;
-  // console.log(otherHandUpId);
-  // objectが返ってきてた
-  // console.log(remoteId);
-  var hand = document.createElement("img");
-  hand.src = "images/hand.png";
-  hand.className = "handImg";
-  document.getElementById(otherHandUpId).appendChild(hand);
-  setTimeout(function () {
-    document.getElementById(otherHandUpId).removeChild(hand);
-  }, 15000);
+  let otherHandElemId = "otherHandImg_" + remoteId.id;
+  if (!document.getElementById(otherHandElemId)) {
+    var otherHandUpId = "area_" + remoteId.id;
+    // console.log(otherHandUpId);
+    // objectが返ってきてた
+    // console.log(remoteId);
+    var hand = document.createElement("img");
+    hand.src = "images/hand.png";
+    hand.className = "handImg";
+    hand.id = otherHandElemId;
+    document.getElementById(otherHandUpId).appendChild(hand);
+    otherHandTimer = setTimeout(function () {
+      document.getElementById(otherHandUpId).removeChild(hand);
+    }, 15000);
+  } else {
+    clearTimeout(otherHandTimer);
+    document.getElementById(otherHandElemId).remove();
+  }
 }
 
 function myNameSend(myId, myName) {
