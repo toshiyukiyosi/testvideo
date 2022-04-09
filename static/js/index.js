@@ -481,28 +481,31 @@ function unlockRoom() {
   //u cant unlock. everyone must out.
 }
 
-let myHandTimer;
+
+let myHandTimer; //setTimeoUtタイマー初期化
 function handUp() {
   socket.emit("handup", socket.id);
+  //要素の存在判定
   if (!document.getElementById("myHand")) {
     var myVideoArea = document.getElementById("my_video_area");
     var myhand = document.createElement("img");
     myhand.src = "images/hand.png";
     myhand.className = "handImg";
-    myhand.id = "myHand";
+    myhand.id = "myHand"; //存在判定用id
     myVideoArea.appendChild(myhand);
     myHandTimer = setTimeout(function () {
       myVideoArea.removeChild(myhand);
     }, 15000);
   } else {
-    clearTimeout(myHandTimer);
-    document.getElementById("myHand").remove();
+    clearTimeout(myHandTimer); //setTimeoutタイマー初期化
+    document.getElementById("myHand").remove(); //要素削除
   }
 }
 
-let otherHandTimer;
+let otherHandTimer; //setTimeoUtタイマー初期化
 function otherHandUp(remoteId) {
-  let otherHandElemId = "otherHandImg_" + remoteId.id;
+  let otherHandElemId = "otherHandImg_" + remoteId.id; //存在判定用id
+  //要素の存在確認
   if (!document.getElementById(otherHandElemId)) {
     var otherHandUpId = "area_" + remoteId.id;
     // console.log(otherHandUpId);
@@ -511,14 +514,14 @@ function otherHandUp(remoteId) {
     var hand = document.createElement("img");
     hand.src = "images/hand.png";
     hand.className = "handImg";
-    hand.id = otherHandElemId;
+    hand.id = otherHandElemId; //存在判定用id
     document.getElementById(otherHandUpId).appendChild(hand);
     otherHandTimer = setTimeout(function () {
       document.getElementById(otherHandUpId).removeChild(hand);
     }, 15000);
   } else {
-    clearTimeout(otherHandTimer);
-    document.getElementById(otherHandElemId).remove();
+    clearTimeout(otherHandTimer); //setTimeoutタイマー初期化
+    document.getElementById(otherHandElemId).remove(); //要素削除
   }
 }
 
