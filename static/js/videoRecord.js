@@ -53,8 +53,6 @@ class VideoRecord {
     this.$recordStop.addEventListener("click", this.stopRecording);
     this.$playStart.addEventListener("click", this.startPlaying);
     this.$download.addEventListener("click", this.download);
-
-    this.ffmpeg = new FFmpegEngine();
   }
 
   /**
