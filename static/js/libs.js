@@ -125,7 +125,7 @@ function setApplyConstraints() {
     })
     .catch((e) => {
       console.log("制約を設定できませんでした:", e);
-      alert("ブラウザが対応していません\n推奨ブラウザ：Google chrome");
+      alert("映像設定出来ませんでした。リロードを行って下さい");
     });
 }
 
