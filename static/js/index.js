@@ -295,20 +295,10 @@ function initVideoArea() {
 
 function startVideo() {
   reloadFunction = startVideo;
-  // navigator.getUserMedia({ video: true, audio: true },
-  //     function (stream) {
-  //         prepareStream(stream);
-  //         if (firstActionForReload) {
-  //             initVideoArea();
-  //             firstActionForReload = false;
-  //         }
-  //     },
-  //     function (error) {
-  //         console.error('fail ' + error.code);
-  //         return;
-  //   var medias = { video: true, audio: true };
-  //設定値がある場合、映像設定を行う。
-  if (videoWidth) {
+  let checkAtem = checkAtemMiniDevice();
+
+  //設定値があり、ATEM miniが接続されていない場合、映像設定を行う。
+  if (videoWidth && !checkAtem) {
     var medias = {
       audio: true,
       video: {
@@ -319,7 +309,8 @@ function startVideo() {
         aspectRatio: aspectRatio, //アスペクト比
       },
     };
-  } else { //設定値がない場合は各所の環境に依存させる
+  } else {
+    //設定値がない場合は各所の環境に依存させる
     var medias = { video: true, audio: true };
   }
   navigator.mediaDevices
@@ -330,14 +321,35 @@ function startVideo() {
         initVideoArea();
         firstActionForReload = false;
       }
+      //Atem miniのデバイスが存在する場合、映像が映らなくなるため、映像を再設定
+      //checkAtemDevices()で存在判定済み
+      if (videoWidth && checkAtem) {
+        let videoTrack = localStream.getVideoTracks()[0];
+        let currentConstrains = videoTrack.getConstraints();
+        videoTrack
+          .applyConstraints({
+            width: videoWidth,
+            height: videoHeight,
+            frameRate: videoFps,
+            aspectRatio: aspectRatio,
+          })
+          .then(() => {
+            currentConstrains = videoTrack.getConstraints();
+            console.log("映像の設定値:", currentConstrains);
+          })
+          .catch((e) => {
+            console.log("制約を設定できませんでした:", e);
+            alert("ATEM miniの接続を確認しましたが、映像設定出来ませんでした。リロードを行って下さい");
+          });
+      }
     })
     .catch(function (error) {
       console.error("fail:" + error);
       return;
     });
 }
-// );
-// }
+
+
 var screenShare = new SkyWay.ScreenShare({ debug: true });
 function startScreenShare() {
   if (!screenShare.isEnabledExtension()) {
@@ -550,6 +562,24 @@ function otherNameCreate(otherconf) {
   } else {
     console.log("名前が一緒");
     return;
+  }
+}
+
+/**
+ * ATEM miniデバイスがPCに接続されているかチェック
+ */
+ async function checkAtemMiniDevice() {
+  //接続されているデバイス一覧を取得
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  // console.log(devices);
+  // Atem miniのでデバイスを検索
+  const ATEMCheck = devices.find(device => device.label.includes('Atem mini'));
+  if (ATEMCheck) {
+    console.log("Atem mini check : true" );
+    return true;
+  } else {
+    console.log("Atem mini check : false");
+    return false;
   }
 }
 
